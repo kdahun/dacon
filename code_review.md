@@ -1,6 +1,6 @@
 '''
 
-class SatelliteDataset(Dataset):
+    class SatelliteDataset(Dataset):
     def __init__(self, csv_file, transform=None, infer=False):
         self.data = pd.read_csv(csv_file)
         self.transform = transform
