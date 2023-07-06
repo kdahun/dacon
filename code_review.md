@@ -1,7 +1,7 @@
-'''c
+'''
 
 class SatelliteDataset(Dataset):
-    def __init__(self, csv_file, transform=None, infer=False): # csv에서 데이터 읽어오기 infer은 뭐지?
+    def __init__(self, csv_file, transform=None, infer=False):
         self.data = pd.read_csv(csv_file)
         self.transform = transform
         self.infer = infer
