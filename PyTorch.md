@@ -42,3 +42,60 @@ Dataset을 DataLoader의 인자로 전달한다. 이는 데이터셋을 순회 �
     for X,y in test_dataloader:
         print(f"Shape of X[N, C, H, W]: {X.shape}")
         print(f"Shape of y: {y.shape} {y.dtype}")
+
+# 모델 만들기
+PyTorch에서 신경망 모델은 nn.Module을 상속받는 클래스를 생성하여 정의한다. __init__ 함수에서 신경망의 계층(layer)들을 정의하고 forward 함수에서 신경망에 데이터를 어떻게 전달할지 지정한다.
+# 학습에 사용할 CPU나 GPU, MPS 장치를 얻습니다.
+    device = (
+        "cuda"
+        if torch.cuda.is_available()
+        else "mps"
+        if torch.backends.mps.is_available()
+        else "cpu"
+    )
+    print(f"Using {device} device")
+
+# 모델을 정의합니다.
+    class NeuralNetwork(nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.flatten = nn.Flatten()
+            self.linear_relu_stack = nn.Sequential(
+                nn.Linear(28*28, 512),
+                nn.ReLU(),
+                nn.Linear(512, 512),
+                nn.ReLU(),
+                nn.Linear(512, 10)
+            )
+
+        def forward(self, x):
+            x = self.flatten(x)
+            logits = self.linear_relu_stack(x)
+            return logits
+
+    model = NeuralNetwork().to(device)
+    print(model)
+
+# 모델 매개변수 최적화하기
+모델을 학습하려면 손실함수(loss function)와 옵티마이저(optimizer)가 필요하다.
+    loss_fn = nn.CrossEntropyLoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
+
+각 학습단계(training loop)에서 모델은 학습 데이터셋에 대한 예측을 수행하고, 예측 오류를 역전파하여 모델의 매개변수를 조정한다.
+    def train(dataloader, model, loss_fn,optimizer):
+        size= len(dataloader.dataset)
+        for batch, (X,y) in enumerate(dataloader):
+            X, y = X.to(device),y.to(device)
+        
+        # 예측 오류 계산
+            pred = model(X)
+            loss = loss_fn(pred,y)
+        
+        # 역전파
+            optimizer.zero_grad()
+            loss.backward()
+            optimizedr.step()
+        
+            if batch % 100 == 0:
+                loss, current = loss.item() , (batch+1) * len(X)
+                print(f"loss:{loss:>7f} [{current:>5d}/{size:>5d}]")
