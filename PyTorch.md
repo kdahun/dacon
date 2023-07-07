@@ -100,3 +100,4 @@ PyTorch에서 신경망 모델은 nn.Module을 상속받는 클래스를 생성�
             if batch % 100 == 0:
                 loss, current = loss.item() , (batch+1) * len(X)
                 print(f"loss:{loss:>7f} [{current:>5d}/{size:>5d}]")
+
