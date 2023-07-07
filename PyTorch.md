@@ -82,6 +82,7 @@ PyTorch에서 신경망 모델은 nn.Module을 상속받는 클래스를 생성�
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
 
 각 학습단계(training loop)에서 모델은 학습 데이터셋에 대한 예측을 수행하고, 예측 오류를 역전파하여 모델의 매개변수를 조정한다.
+
     def train(dataloader, model, loss_fn,optimizer):
         size= len(dataloader.dataset)
         for batch, (X,y) in enumerate(dataloader):
